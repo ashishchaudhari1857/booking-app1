@@ -14,10 +14,14 @@ date:cdate
 };
 // localStorage.setItem(obj.name,JSON.stringify(obj));
   axios
-.post('https://crudcrud.com/api/16ed1480a7e9460a9b6212120fdb1d7c/appointmentData' ,obj)
-.then(res=>console.log(res))
+.get('https://crudcrud.com/api/16ed1480a7e9460a9b6212120fdb1d7c/appointmentData')
+.then(res=>{
+  console.log(res);
+  for(let i=0 ;i<res.data.length;i++){
+  showonscreen(res.data[i]);
+  }
+})
 .catch(err=>console.log(err))
-   showonscreen(obj);
   
 }
 function showonscreen(obj){
