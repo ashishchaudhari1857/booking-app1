@@ -5,7 +5,7 @@ function add(e){
     var cname = document.getElementById('name').value;
     var Ccontact = document.getElementById('contact').value;
     var cdate = document.getElementById('date').value;
-  console.log(cname ,Ccontact,cdate);
+  // console.log(cname ,Ccontact,cdate);
    
   const obj={
   name:cname,
@@ -14,14 +14,16 @@ date:cdate
 };
 // localStorage.setItem(obj.name,JSON.stringify(obj));
   axios
-.get('https://crudcrud.com/api/16ed1480a7e9460a9b6212120fdb1d7c/appointmentData')
+.get('https://crudcrud.com/api/796d475c1adc4a25af8cc5b6c01b25b2/appointmentData')
 .then(res=>{
   console.log(res);
   for(let i=0 ;i<res.data.length;i++){
   showonscreen(res.data[i]);
+ 
   }
 })
-.catch(err=>console.log(err))
+.catch(err=>{console.log(err)});
+// showonscreen(obj);
   
 }
 function showonscreen(obj){
@@ -33,23 +35,46 @@ function showonscreen(obj){
    btn.appendChild(document.createTextNode("delete"));
    ebtn.appendChild(document.createTextNode("edit"));
    var  li =document.createElement('li');
-   var  text=document.createTextNode(`${obj.name} ${obj.contact} ${obj.date}`);
+   var  text=document.createTextNode(`${obj._id} ${obj.name} ${obj.contact} ${obj.date}`);
    li.appendChild(text);
    li.appendChild(btn);
    li.appendChild(ebtn);
    parent.appendChild(li);
-   btn.addEventListener('click' ,del);
-   ebtn.addEventListener('click' ,edit);
-   function  del(e){
-      localStorage.removeItem(obj.name);
+   btn.addEventListener('click' ,function(){ del()});
+   ebtn.addEventListener('click' ,function() {edit()});
+   function del(e){ 
+    usreid=`${obj._id}`;
+     console.log( usreid);
+      // // localStorage.removeItem(obj.name);
+
+      axios
+      .delete(`https://crudcrud.com/api/796d475c1adc4a25af8cc5b6c01b25b2/appointmentData/${usreid}`)
+      .then(res=>{
       parent.removeChild(li);
+        })
+        .catch(err=>console.log(err));
+
    }
    function edit(e){
-      localStorage.removeItem(obj.name);
+      // localStorage.removeItem(obj.name);
+      // console.log()
       parent.removeChild(li);
       document.getElementById('name').value=obj.name
      document.getElementById('contact').value=obj.contact;
      document.getElementById('date').value=obj.date;
+     form.addEventListener('submit' ,function(){
+      var cname = document.getElementById('name').value;
+      var Ccontact = document.getElementById('contact').value;
+      var cdate = document.getElementById('date').value;
+      axios.put('https://crudcrud.com/api/796d475c1adc4a25af8cc5b6c01b25b2/appointmentData/' + obj._id,{name: cname,
+      contact: Ccontact,
+      date: cdate}) 
+      .then(res=>showonscreen(res.data))
+      .catch(err=> console.log(err))
+
+     })
+       
+    
    }
 
    
